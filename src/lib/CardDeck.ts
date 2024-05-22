@@ -5,7 +5,6 @@ interface Cards {
   getCards(howMany: number): Card[];
 }
 
-
 class CardDeck implements Cards {
   public cards: Card[];
 
@@ -31,12 +30,13 @@ class CardDeck implements Cards {
     const drawnCards: Card[] = [];
 
     for (let i = 0; i < howMany; i++) {
-      if (this.cards.length === 0) {
-        throw new Error("Not enough cards in the deck");
-      }
       drawnCards.push(this.getCard());
     }
     return drawnCards;
+  }
+
+  getCardCount(): number {
+    return this.cards.length;
   }
 }
 
