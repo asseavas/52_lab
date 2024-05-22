@@ -14,3 +14,7 @@
   background-color: #bcbcbc;
   cursor: pointer;
 }
+
+.resultText {
+  margin-top: 15px;
+}

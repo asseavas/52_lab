@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Card from "./components/Card/Card.tsx";
 import CardDeck from "./lib/CardDeck.ts";
+import PokerHand from "./lib/PokerHand.ts";
 import './App.css';
 
-interface ICard {
+export interface ICard {
   rank: string;
   suit: string;
 }
@@ -11,17 +12,23 @@ interface ICard {
 const App = () => {
   const [deck] = useState<CardDeck>(new CardDeck());
   const [cards, setCards] = useState<ICard[]>([]);
+  const [outcome, setOutcome] = useState<string>("");
 
   const cardCopy = () => {
-    if (deck.getCardCount() > 0) {
-      const drawnCards = deck.getCards(5);
+    const remainingCards = deck.getCardCount();
+    if (remainingCards > 0) {
+      const drawCount = remainingCards >= 5 ? 5 : remainingCards;
+      const drawnCards = deck.getCards(drawCount);
       setCards(drawnCards);
+
+      const pokerHand = new PokerHand(drawnCards);
+      setOutcome(pokerHand.getOutcome());
     }
   };
 
   return (
     <>
-      {deck.getCardCount() === 0 ? (
+      {deck.getCardCount() === 0 && cards.length === 0 ? (
         <div>Карты закончились</div>
       ) : (
         <>
@@ -30,7 +37,10 @@ const App = () => {
               <Card key={index} rank={card.rank} suit={card.suit}/>
             ))}
           </div>
-          <button className="btn" onClick={cardCopy}>Раздать карты</button>
+          {outcome && <div className="resultText">Результат: {outcome}</div>}
+          {deck.getCardCount() > 0 && (
+            <button className="btn" onClick={cardCopy}>Раздать карты</button>
+          )}
         </>
       )}
     </>
